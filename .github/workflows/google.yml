@@ -22,9 +22,9 @@ env:
   GAR_LOCATION: us-east1    # TODO: update region of the Artifact Registry
   GKE_CLUSTER: cluster-1    # TODO: update to cluster name
   GKE_ZONE: us-east1-b      # TODO: update to cluster zone
-  DEPLOYMENT_NAME: gke-code-challenge-fe # TODO: update to deployment name
+  DEPLOYMENT_NAME: gke-code-challenge # TODO: update to deployment name
   REPOSITORY: char # TODO: update to Artifact Registry docker repository
-  IMAGE: code-challenge-fe-image
+  IMAGE: code-challenge-image
 
 jobs:
   setup-build-publish-deploy:
