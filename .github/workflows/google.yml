@@ -24,7 +24,7 @@ env:
   GKE_ZONE: us-east1-b      # TODO: update to cluster zone
   DEPLOYMENT_NAME: gke-code-challenge # TODO: update to deployment name
   REPOSITORY: char # TODO: update to Artifact Registry docker repository
-  IMAGE: code-challenge-image
+  IMAGE: code-challenge-fe-image
 
 jobs:
   setup-build-publish-deploy:
