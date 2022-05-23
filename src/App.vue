@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h3>Netflix Titles</h3>
+    <h1>Netflix Titles</h1>
     <NetflixTitles/>
   </div>
 </template>
