@@ -182,7 +182,6 @@ export default {
       defaultSortDirection: 'asc',
       currentPage: 1,
       perPage: 20,
-      search: '',
       isFocusable: false,
       isLoading: true,
       isFullPage: true,
