@@ -17,24 +17,23 @@
             <option value="20">20 per page</option>
         </b-select>    
   </b-field>
-     <div v-if="!selected">
+     <div class= "buttons" v-if="!selected">
+       <b-button @click="create()" type="is-success">Create</b-button>
        <b-button :disabled="true" type="is-primary is-light">Edit</b-button>
-       <b-button :disabled="true" type="is-danger is-light">Delete</b-button>
        <b-button :disabled="true" type="is-info is-light">Unselect</b-button>
-       <p>Select a row in the table to activate buttons</p>
      </div>
-     <div v-else>
-      <b-button @click="edit" type="is-primary">Edit</b-button>
-      <b-button @click="remove" type="is-danger">Delete</b-button>
-      <b-button @click="unselect" type="is-info">Unselect</b-button>
-    </div>   
+     <div class="buttons" v-else>
+       <b-button @click="create()" type="is-success">Create</b-button>
+      <b-button @click="edit(selected)" type="is-primary">Edit</b-button>
+      <b-button @click="unselect()" type="is-info">Unselect</b-button>
+    </div>
     <b-table  
       id="my-table"
       :data="data"
       :loading="isLoading"
       :focusable="isFocusable"
       :paginated="isPaginated"
-      :pagination-size= "paginationSize"
+      :pagination-size= "size"
       :pagination-rounded="isPaginationRounded"
       :mobile-cards="hasMobileCards"
       :pagination-position="paginationPosition"
@@ -50,6 +49,97 @@
     >
     </b-table>
   </div>
+  <section>
+        <b-modal :active.sync="isComponentModalActive" has-modal-card>
+            <form action="">
+            <div class="modal-card" style="width: 800px">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Edit Title</p>
+                </header>
+                <section class="modal-card-body">
+                    <b-field label="show id">
+                        <b-input v-if="!isCreate"
+                            type="text"
+                            :value="formProps.show_id"
+                            placeholder="show id"
+                            readonly
+                            required>
+                        </b-input>
+                        <b-input v-else
+                            type="text"
+                            :value="formProps.show_id"
+                            placeholder="show id"
+                            required>
+                        </b-input>
+                    </b-field>
+                    <b-field label="Type">
+                        <b-input
+                            type="text"
+                            v-model="formProps.type"
+                            placeholder="Show/Movie Type">
+                        </b-input>
+                    </b-field>
+                    <b-field label="Title">
+                        <b-input
+                            type="text"
+                            v-model="formProps.title"
+                            placeholder="Show/Movie Title"
+                            required>
+                        </b-input>
+                    </b-field>
+                    <b-field label="Director">
+                        <b-input
+                            type="text"
+                            v-model="formProps.director"
+                            placeholder="Show/Movie Director">
+                        </b-input>
+                    </b-field>
+                    <b-field label="Country">
+                        <b-input
+                            type="text"
+                            v-model="formProps.country"
+                            placeholder="Show/Movie Country">
+                        </b-input>
+                    </b-field>
+                    <b-field label="Duration">
+                        <b-input
+                            type="text"
+                            v-model="formProps.duration"
+                            placeholder="Show/Movie Duration">
+                        </b-input>
+                    </b-field>
+                    <b-field label="Listed In">
+                        <b-input
+                            type="text"
+                            v-model="formProps.listed_in"
+                            placeholder="Show/Movie Listed In">
+                        </b-input>
+                    </b-field>
+                    <b-field label="Rating">
+                        <b-input
+                            type="text"
+                            v-model="formProps.rating"
+                            placeholder="Show/Movie Rating">
+                        </b-input>
+                    </b-field>
+                    <b-field label="Cast">
+                        <b-input
+                            type="textarea"
+                            v-model="formProps.cast"
+                            placeholder="Show/Movie Cast">
+                        </b-input>
+                    </b-field>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button" type="button" @click="close()">Cancel</button>
+                    <button v-if="isCreate" class="button is-success" type="button" @click="save"> Save </button>
+                    <button v-if="!isCreate" class="button is-success" type="button" @click="update()">Update</button>
+                    <button v-if="!isCreate" class="button is-danger" @click="remove()">Delete</button>
+                </footer>
+            </div>
+        </form>
+        </b-modal>
+    </section>
 </div>
 </template>
 
@@ -57,6 +147,8 @@
 import axios from 'axios';
 export default {
   name: 'NetflixTitles',
+  components: {
+  },
   data() {
     return {
       fields: [
@@ -172,6 +264,7 @@ export default {
           },
         ],
       data: [],
+      isComponentModalActive:false,
       hasMobileCards:true,
       sortIcon: "arrow-up",
       isPaginated: true,
@@ -189,11 +282,27 @@ export default {
       size:'is-small',
       excelExport: [],
       selected: null,
+      isCreate: false,
+      formProps:{
+        cast: '',
+        country: '',
+        date_added: '',
+        description: '',
+        director: '',
+        duration: '',
+        listed_in: '',
+        rating: '',
+        release_year: '',
+        show_id: '',
+        title: '',
+        type: '',
+      },
     };
+
   },
   computed: {
     rows() {
-        return this.data.length
+      return this.data.length
     }
   },
   mounted() {
@@ -203,22 +312,72 @@ export default {
     async getTitles() {
       this.isLoading = true;
       const path = 'http://34.73.22.157/api/netflix_titles/get_all';
-      const { data } = await axios.get(path);
+      const { data } = await axios.get(path).catch((error) => {
+        console.log(error);
+      });
       this.data = data;
       console.log('netflix titles',this.data);
       this.isLoading = false;
-      console.log('hi');
     },
-    edit() {
-      console.log('This is where we edit'+ this.selected);
+    edit(selected) {
+      this.isCreate = false;
+      this.isComponentModalActive = true;
+      console.log('This is where we edit'+ JSON.stringify(selected));
+      this.formProps = JSON.parse(JSON.stringify(selected));
     },
-    remove() {
-      console.log('This is where we delete' + this.selected);
+    create(){
+      this.isCreate = true;
+      this.formProps = {
+        cast: '',
+        country: '',
+        date_added: '',
+        description: '',
+        director: '',
+        duration: '',
+        listed_in: '',
+        rating: '',
+        release_year: '',
+        show_id: '',
+        title: '',
+        type: '',
+      },
+      this.isComponentModalActive = true;
+    },
+    async remove() {
+      const path = `http://34.73.22.157/api/netflix_titles/delete_title/${this.formProps.show_id}`;
+      const status = await axios.delete(path).catch((error) => {
+        console.log(error);
+      });
+      console.log(status);
+      this.data = [];
+      this.getTitles();
+      this.close();
     },
     unselect() {
-      console.log('This is where we unselect' + this.selected);
       this.selected = null;
-    }
+    },
+    async save() {
+      const path = 'http://34.73.22.157/api/netflix_titles/create_title/';
+      const status = await axios.post(path, this.formProps).catch((error) => {
+        console.log(error);
+      });
+      this.data = [];
+      this.getTitles();
+      this.close();
+      console.log(status);
+    },
+    async update () {
+      const path = 'http://34.73.22.157/api/netflix_titles/update_title/';
+      await axios.put(path, this.formProps).catch((error) => {
+        console.log(error);
+      });
+      this.data = [];
+      this.getTitles();
+      this.close();
+    },
+    close(){
+      this.isComponentModalActive = false;
+    },
   },
 };
 </script>
