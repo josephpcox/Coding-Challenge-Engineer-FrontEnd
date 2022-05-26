@@ -58,16 +58,9 @@
                 </header>
                 <section class="modal-card-body">
                     <b-field label="show id">
-                        <b-input v-if="!isCreate"
+                        <b-input
                             type="text"
-                            :value="formProps.show_id"
-                            placeholder="show id"
-                            readonly
-                            required>
-                        </b-input>
-                        <b-input v-else
-                            type="text"
-                            :value="formProps.show_id"
+                            v-model="formProps.show_id"
                             placeholder="show id"
                             required>
                         </b-input>
@@ -115,6 +108,13 @@
                             placeholder="Show/Movie Listed In">
                         </b-input>
                     </b-field>
+                    <b-field label="Release Year">
+                        <b-input
+                            type="text"
+                            v-model="formProps.release_year"
+                            placeholder="Show/Movie Release Year">
+                        </b-input>
+                    </b-field>
                     <b-field label="Rating">
                         <b-input
                             type="text"
@@ -132,7 +132,7 @@
                 </section>
                 <footer class="modal-card-foot">
                     <button class="button" type="button" @click="close()">Cancel</button>
-                    <button v-if="isCreate" class="button is-success" type="button" @click="save"> Save </button>
+                    <button v-if="isCreate" class="button is-success" type="button" @click="save()"> Save </button>
                     <button v-if="!isCreate" class="button is-success" type="button" @click="update()">Update</button>
                     <button v-if="!isCreate" class="button is-danger" @click="remove()">Delete</button>
                 </footer>
@@ -152,6 +152,17 @@ export default {
   data() {
     return {
       fields: [
+        {
+            field: 'id',
+            title: 'ID',
+            label:'ID',
+            sortable: true,
+            searchable: true,
+            numeric: false,
+            visible:true,
+            width: '100',
+            centered: true,
+          },
          {
             field: 'show_id',
             title: 'Show ID',
@@ -284,6 +295,7 @@ export default {
       selected: null,
       isCreate: false,
       formProps:{
+        id:'',
         cast: '',
         country: '',
         date_added: '',
@@ -344,14 +356,14 @@ export default {
       this.isComponentModalActive = true;
     },
     async remove() {
-      const path = `http://34.73.22.157/api/netflix_titles/delete_title/${this.formProps.show_id}`;
+      const path = `http://34.73.22.157/api/netflix_titles/delete_title/${this.formProps.id}`;
       const status = await axios.delete(path).catch((error) => {
         console.log(error);
       });
-      console.log(status);
       this.data = [];
       this.getTitles();
-      this.close();
+      // this.close();
+      console.log(status);
     },
     unselect() {
       this.selected = null;
