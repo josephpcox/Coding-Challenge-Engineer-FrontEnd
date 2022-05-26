@@ -122,10 +122,24 @@
                             placeholder="Show/Movie Rating">
                         </b-input>
                     </b-field>
+                    <b-field label="Date Added">
+                        <b-input
+                            type="text"
+                            v-model="formProps.date_added"
+                            placeholder="Show/Movie Rating">
+                        </b-input>
+                     </b-field>
                     <b-field label="Cast">
                         <b-input
                             type="textarea"
                             v-model="formProps.cast"
+                            placeholder="Show/Movie Cast">
+                        </b-input>
+                    </b-field>
+                    <b-field label="Description">
+                        <b-input
+                            type="textarea"
+                            v-model="formProps.description"
                             placeholder="Show/Movie Cast">
                         </b-input>
                     </b-field>
@@ -230,6 +244,17 @@ export default {
             centered: true,
           },
           {
+            field: 'date_added',
+            title: 'Date Added',
+            label: 'Date Added',
+            sortable: true,
+            searchable: true,
+            numeric: false,
+            visible:true,
+            width: '100',
+            centered: true,
+          },
+          {
             field: 'listed_in',
             title: 'Listed In',
             label: 'Listed In',
@@ -266,6 +291,17 @@ export default {
             field: 'cast',
             title: 'Cast',
             label: 'Cast',
+            sortable: true,
+            searchable: true,
+            numeric: false,
+            visible:false,
+            width: '100',
+            centered: true,
+          },
+          {
+            field: 'description',
+            title: 'Description',
+            label: 'description',
             sortable: true,
             searchable: true,
             numeric: false,
