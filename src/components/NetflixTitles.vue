@@ -134,7 +134,7 @@
                     <button class="button" type="button" @click="close()">Cancel</button>
                     <button v-if="isCreate" class="button is-success" type="button" @click="save()"> Save </button>
                     <button v-if="!isCreate" class="button is-success" type="button" @click="update()">Update</button>
-                    <button v-if="!isCreate" class="button is-danger" @click="remove()">Delete</button>
+                    <button v-if="!isCreate" class="button is-danger" type="button" @click="remove()">Delete</button>
                 </footer>
             </div>
         </form>
@@ -362,7 +362,7 @@ export default {
       });
       this.data = [];
       this.getTitles();
-      // this.close();
+      this.close();
       console.log(status);
     },
     unselect() {
